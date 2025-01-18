@@ -1,6 +1,6 @@
 <?php
-require_once '../src/database.php';
-require_once '../src/filter_and_sort.php';
+require_once realpath(dirname(__FILE__) . '/../src/database.php');
+require_once realpath(dirname(__FILE__) . '/../src/filter_and_sort.php');
 
 function runTests(): void   {
     testGetCoaches();
