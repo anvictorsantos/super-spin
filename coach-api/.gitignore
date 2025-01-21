@@ -1,2 +1,10 @@
+# Ignore system files
+.DS_Store
+Thumbs.db
+
+# Ignore environment and configuration files
 .env
-vendor/
+.env.*.local
+
+# Ignore Composer dependencies
+/vendor/
