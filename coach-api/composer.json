@@ -1,0 +1,19 @@
+{
+    "name": "super-spin/coach-api",
+    "description": "This API powers the Coach Listing Page, showcasing available coaches and allowing users to filter and sort through them.",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Antonio Pontes",
+            "email": "developer.antonio.pontes@gmail.com"
+        }
+    ],
+    "require": {
+        "vlucas/phpdotenv": "^5.6"
+    }
+}
