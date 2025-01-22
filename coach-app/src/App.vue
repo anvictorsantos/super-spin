@@ -3,12 +3,12 @@
     <h1 class="text-center">SuperSpin Coaches</h1>
     <div class="filter-container">
       <SearchBar @search="handleSearch" />
-      <SortDropdown @sort="handleSort" />
+      <!-- <SortDropdown @sort="handleSort" /> -->
     </div>
     <main>
       <div v-if="loading">Loading...</div>
       <div v-else-if="error" class="error">{{ error }}</div>
-      <DataTable :fields="fields" :data="filteredCoaches" />
+      <DataTable :fields="fields" :data="filteredCoaches" :sortableFields="sortableFields" />
     </main>
   </div>
 </template>
@@ -34,7 +34,6 @@ export default {
       { key: 'id', label: 'ID' },
       { key: 'name', label: 'Name' },
       { key: 'years_of_experience', label: 'Years of Experience' },
-      { key: 'hourly_rate', label: 'Hourly Rate' },
       { key: 'hourly_rate', label: 'Hourly Rate' },
       { key: 'location', label: 'Location' },
       { key: 'joined_at', label: 'Joined At' },
@@ -75,6 +74,8 @@ export default {
       return result
     })
 
+    const sortableFields = ['hourly_rate']
+
     const handleSearch = (query: string) => {
       searchQuery.value = query
     }
@@ -88,6 +89,7 @@ export default {
     return {
       coaches,
       filteredCoaches,
+      sortableFields,
       loading,
       error,
       handleSearch,
