@@ -7,10 +7,7 @@ use Helpers\FilterSort;
 
 class CoachController
 {
-    public function __construct(private CoachGateway $gateway)
-    {
-
-    }
+    public function __construct(private CoachGateway $gateway) {}
 
     public function processRequest(string $method, ?string $id): void
     {
