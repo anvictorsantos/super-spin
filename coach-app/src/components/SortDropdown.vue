@@ -6,28 +6,19 @@
   </select>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script setup lang="ts">
+import { defineEmits } from 'vue'
 
-export default defineComponent({
-  name: 'SortDropdown',
-  emits: ['sort'],
-  setup(_, { emit }) {
-    const onChange = (event: Event) => {
-      const target = event.target as HTMLSelectElement
-      emit('sort', target.value as 'asc' | 'desc')
-    }
+// Define emits using defineEmits
+const emit = defineEmits<{
+  (e: 'sort', direction: 'asc' | 'desc' | ''): void
+}>()
 
-    return { onChange }
-  },
-})
+// Event handler for the dropdown change
+const onChange = (event: Event) => {
+  const target = event.target as HTMLSelectElement
+  emit('sort', target.value as 'asc' | 'desc' | '') // Emit the selected sort direction
+}
 </script>
 
-<style scoped>
-.sort-dropdown {
-  padding: 0.5rem;
-  margin: 1rem 0;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-</style>
+<style scoped></style>

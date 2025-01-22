@@ -7,29 +7,17 @@
   />
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script setup lang="ts">
+import { defineEmits } from 'vue'
 
-export default defineComponent({
-  name: 'SearchBar',
-  emits: ['search'],
-  setup(_, { emit }) {
-    const onInput = (event: Event) => {
-      const target = event.target as HTMLInputElement
-      emit('search', target.value)
-    }
+// Define emits using defineEmits
+const emit = defineEmits<{
+  (e: 'search', query: string): void
+}>()
 
-    return { onInput }
-  },
-})
-</script>
-
-<style scoped>
-.search-bar {
-  width: 100%;
-  padding: 0.5rem;
-  margin: 1rem 0;
-  border: 1px solid #ccc;
-  border-radius: 20px;
+// Event handler for the input field
+const onInput = (event: Event) => {
+  const target = event.target as HTMLInputElement
+  emit('search', target.value) // Emit the search query
 }
-</style>
+</script>

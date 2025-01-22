@@ -250,3 +250,28 @@ slot[name="footer"] > *:hover {
   font-size: 12px;
   margin-left: 5px;
 }
+
+.sortable-header {
+  cursor: pointer;
+}
+
+.asc-icon,
+.desc-icon {
+  font-size: 12px;
+  margin-left: 5px;
+}
+
+.search-bar {
+  width: 100%;
+  padding: 0.5rem;
+  margin: 1rem 0;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+}
+
+.sort-dropdown {
+  padding: 0.5rem;
+  margin: 1rem 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
