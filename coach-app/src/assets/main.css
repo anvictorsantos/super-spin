@@ -260,3 +260,24 @@ button:disabled {
   cursor: not-allowed;
   opacity: 0.5;
 }
+
+/* Screen reader only class to hide elements but keep them accessible for assistive tech */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  clip: rect(0, 0, 0, 0);
+  overflow: hidden;
+}
+
+.sort-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
