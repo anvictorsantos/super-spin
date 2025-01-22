@@ -11,11 +11,6 @@
     <table>
       <thead>
         <tr>
-          <th v-if="rowSelector">
-            <div>
-              <input id="contact-selectAll" type="checkbox" @change="selectAll" />
-            </div>
-          </th>
           <th v-for="(item, idx) in fields" :key="idx">
             {{ item.label }}
           </th>
@@ -28,7 +23,7 @@
               <input :id="`contact-${index}`" v-model="item.selected" type="checkbox" />
             </div>
           </td>
-          <td v-for="(field, idx) in fields" :key="idx" @click="rowSelected(item)">
+          <td v-for="(field, idx) in fields" :key="idx">
             <span v-if="!hasNamedSlot(field.key)" :item="item">
               {{ item[field.key] }}
             </span>
@@ -86,22 +81,9 @@ export default defineComponent({
   },
   emits: ['rowSelected'],
   setup(props, { emit, slots }) {
-    const selectAll = (e: Event) => {
-      const checked = (e.target as HTMLInputElement).checked
-      props.data.forEach((item) => {
-        item.selected = checked
-      })
-    }
-
-    const rowSelected = (item: RowData) => {
-      emit('rowSelected', item)
-    }
-
     const hasNamedSlot = (slotName: string) => !!slots[slotName]
 
     return {
-      selectAll,
-      rowSelected,
       hasNamedSlot,
     }
   },
