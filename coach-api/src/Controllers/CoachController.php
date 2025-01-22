@@ -43,7 +43,7 @@ class CoachController
                     echo json_encode(["errors" => $errors]);
                     break;
                 }
-                
+
                 $rows = $this->gateway->update($coach, $data);
 
                 echo json_encode([
@@ -60,7 +60,7 @@ class CoachController
                     "rows" => $rows
                 ]);
                 break;
-            
+
             default:
                 http_response_code(405);
                 header("Allow: GET, PATCH, DELETE");
@@ -72,8 +72,9 @@ class CoachController
     {
         switch ($method) {
             case 'GET':
-                $filter = $_GET['filter'] ?? ''; // Retrieve the filter from the query string
-                $sort = $_GET['sort'] ?? 'asc'; // Retrieve the sort order from the query string, default to ascending
+                // Retrieve filter and sort parameters from the query string
+                $filter = $_GET['filter'] ?? ''; // Single filter for name or location
+                $sort = $_GET['sort'] ?? 'asc'; // Sort order (default to ascending)
 
                 $coaches = $this->gateway->getAll(); // Get all coaches from the gateway
 
@@ -96,7 +97,7 @@ class CoachController
                     echo json_encode(["errors" => $errors]);
                     break;
                 }
-                
+
                 $id = $this->gateway->create($data);
 
                 http_response_code(201);
@@ -105,7 +106,7 @@ class CoachController
                     "id" => $id
                 ]);
                 break;
-            
+
             default:
                 http_response_code(405);
                 header("Allow: GET, POST");

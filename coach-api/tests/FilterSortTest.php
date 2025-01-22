@@ -1,102 +1,110 @@
 <?php
 
 use Helpers\FilterSort;
-use PHPUnit\Framework\TestCase;
 
-class FilterSortTest extends TestCase
+class FilterSortTest extends PHPUnit\Framework\TestCase
 {
-    public function testFilterAndSortByNameAndLocation()
+    public function testFilterByNameOrLocation(): void
     {
-        // Sample coaches data
         $coaches = [
-            ['id' => 1, 'name' => 'John Doe', 'location' => 'New York, USA', 'hourly_rate' => 50],
-            ['id' => 2, 'name' => 'Jane Doe', 'location' => 'London, UK', 'hourly_rate' => 65],
-            ['id' => 3, 'name' => 'Jim Doe', 'location' => 'New York, USA', 'hourly_rate' => 40],
-            ['id' => 4, 'name' => 'Jill Doe', 'location' => 'Los Angeles, USA', 'hourly_rate' => 70]
+            ['id' => 1, 'name' => 'John Smith', 'hourly_rate' => 50, 'location' => 'New York', 'joined_at' => '2023-05-10'],
+            ['id' => 2, 'name' => 'Emma Johnson', 'hourly_rate' => 65, 'location' => 'London', 'joined_at' => '2021-03-15'],
+            ['id' => 3, 'name' => 'Liam Brown', 'hourly_rate' => 40, 'location' => 'Sydney', 'joined_at' => '2022-07-20'],
+            ['id' => 4, 'name' => 'Sophia Garcia', 'hourly_rate' => 80, 'location' => 'Los Angeles', 'joined_at' => '2020-01-25'],
+            ['id' => 5, 'name' => 'Noah Wilson', 'hourly_rate' => 35, 'location' => 'Toronto', 'joined_at' => '2024-09-12'],
         ];
 
-        // Filter by "Doe" in name and "USA" in location, sort by hourly_rate ascending
-        $filterName = 'Doe';
-        $filterLocation = 'USA';
+        // Test filter by name ("John")
+        $filter = 'John'; // Should match "John Smith"
+        $expected = [
+            ['id' => 1, 'name' => 'John Smith', 'hourly_rate' => 50, 'location' => 'New York', 'joined_at' => '2023-05-10'],
+            ['id' => 2, 'name' => 'Emma Johnson', 'hourly_rate' => 65, 'location' => 'London', 'joined_at' => '2021-03-15'],
+        ];
+        $result = FilterSort::filterAndSort($coaches, $filter, 'asc');
+        $this->assertEquals($expected, $result);
+
+        // Test filter by location ("London")
+        $filter = 'London'; // Should match "Emma Johnson" in London
+        $expected = [
+            ['id' => 2, 'name' => 'Emma Johnson', 'hourly_rate' => 65, 'location' => 'London', 'joined_at' => '2021-03-15']
+        ];
+        $result = FilterSort::filterAndSort($coaches, $filter, 'asc');
+        $this->assertEquals($expected, $result);
+
+        // Test filter that matches both name and location
+        $filter = 'Liam'; // Should match "Liam Brown"
+        $expected = [
+            ['id' => 3, 'name' => 'Liam Brown', 'hourly_rate' => 40, 'location' => 'Sydney', 'joined_at' => '2022-07-20']
+        ];
+        $result = FilterSort::filterAndSort($coaches, $filter, 'asc');
+        $this->assertEquals($expected, $result);
+    }
+
+    public function testSortAscending(): void
+    {
+        $coaches = [
+            ['id' => 1, 'name' => 'John Smith', 'hourly_rate' => 50, 'location' => 'New York', 'joined_at' => '2023-05-10'],
+            ['id' => 2, 'name' => 'Emma Johnson', 'hourly_rate' => 65, 'location' => 'London', 'joined_at' => '2021-03-15'],
+            ['id' => 3, 'name' => 'Liam Brown', 'hourly_rate' => 40, 'location' => 'Sydney', 'joined_at' => '2022-07-20'],
+            ['id' => 4, 'name' => 'Sophia Garcia', 'hourly_rate' => 80, 'location' => 'Los Angeles', 'joined_at' => '2020-01-25'],
+            ['id' => 5, 'name' => 'Noah Wilson', 'hourly_rate' => 35, 'location' => 'Toronto', 'joined_at' => '2024-09-12'],
+        ];
+
+        // Sort by hourly_rate in ascending order
+        $expected = [
+            ['id' => 5, 'name' => 'Noah Wilson', 'hourly_rate' => 35, 'location' => 'Toronto', 'joined_at' => '2024-09-12'],
+            ['id' => 3, 'name' => 'Liam Brown', 'hourly_rate' => 40, 'location' => 'Sydney', 'joined_at' => '2022-07-20'],
+            ['id' => 1, 'name' => 'John Smith', 'hourly_rate' => 50, 'location' => 'New York', 'joined_at' => '2023-05-10'],
+            ['id' => 2, 'name' => 'Emma Johnson', 'hourly_rate' => 65, 'location' => 'London', 'joined_at' => '2021-03-15'],
+            ['id' => 4, 'name' => 'Sophia Garcia', 'hourly_rate' => 80, 'location' => 'Los Angeles', 'joined_at' => '2020-01-25'],
+        ];
+
+        $result = FilterSort::filterAndSort($coaches, '', 'asc');
+        $this->assertEquals($expected, $result);
+    }
+
+    public function testSortDescending(): void
+    {
+        $coaches = [
+            ['id' => 1, 'name' => 'John Smith', 'hourly_rate' => 50, 'location' => 'New York', 'joined_at' => '2023-05-10'],
+            ['id' => 2, 'name' => 'Emma Johnson', 'hourly_rate' => 65, 'location' => 'London', 'joined_at' => '2021-03-15'],
+            ['id' => 3, 'name' => 'Liam Brown', 'hourly_rate' => 40, 'location' => 'Sydney', 'joined_at' => '2022-07-20'],
+            ['id' => 4, 'name' => 'Sophia Garcia', 'hourly_rate' => 80, 'location' => 'Los Angeles', 'joined_at' => '2020-01-25'],
+            ['id' => 5, 'name' => 'Noah Wilson', 'hourly_rate' => 35, 'location' => 'Toronto', 'joined_at' => '2024-09-12'],
+        ];
+
+        // Sort by hourly_rate in descending order
+        $expected = [
+            ['id' => 4, 'name' => 'Sophia Garcia', 'hourly_rate' => 80, 'location' => 'Los Angeles', 'joined_at' => '2020-01-25'],
+            ['id' => 2, 'name' => 'Emma Johnson', 'hourly_rate' => 65, 'location' => 'London', 'joined_at' => '2021-03-15'],
+            ['id' => 1, 'name' => 'John Smith', 'hourly_rate' => 50, 'location' => 'New York', 'joined_at' => '2023-05-10'],
+            ['id' => 3, 'name' => 'Liam Brown', 'hourly_rate' => 40, 'location' => 'Sydney', 'joined_at' => '2022-07-20'],
+            ['id' => 5, 'name' => 'Noah Wilson', 'hourly_rate' => 35, 'location' => 'Toronto', 'joined_at' => '2024-09-12'],
+        ];
+
+        $result = FilterSort::filterAndSort($coaches, '', 'desc');
+        $this->assertEquals($expected, $result);
+    }
+
+    public function testFilterAndSortByFilterAndSortParams(): void
+    {
+        $coaches = [
+            ['id' => 1, 'name' => 'John Smith', 'hourly_rate' => 50, 'location' => 'New York', 'joined_at' => '2023-05-10'],
+            ['id' => 2, 'name' => 'Emma Johnson', 'hourly_rate' => 65, 'location' => 'London', 'joined_at' => '2021-03-15'],
+            ['id' => 3, 'name' => 'Liam Brown', 'hourly_rate' => 40, 'location' => 'Sydney', 'joined_at' => '2022-07-20'],
+            ['id' => 4, 'name' => 'Sophia Garcia', 'hourly_rate' => 80, 'location' => 'Los Angeles', 'joined_at' => '2020-01-25'],
+            ['id' => 5, 'name' => 'Noah Wilson', 'hourly_rate' => 35, 'location' => 'Toronto', 'joined_at' => '2024-09-12'],
+        ];
+
+        // Test filtering by name ("John") and sorting by hourly_rate (asc)
+        $filter = 'John';
         $sort = 'asc';
         $expected = [
-            ['id' => 3, 'name' => 'Jim Doe', 'location' => 'New York, USA', 'hourly_rate' => 40],
-            ['id' => 1, 'name' => 'John Doe', 'location' => 'New York, USA', 'hourly_rate' => 50],
-            ['id' => 4, 'name' => 'Jill Doe', 'location' => 'Los Angeles, USA', 'hourly_rate' => 70]
+            ['id' => 1, 'name' => 'John Smith', 'hourly_rate' => 50, 'location' => 'New York', 'joined_at' => '2023-05-10'],
+            ['id' => 2, 'name' => 'Emma Johnson', 'hourly_rate' => 65, 'location' => 'London', 'joined_at' => '2021-03-15'],
         ];
-
-        // Call the method
-        $actual = FilterSort::filterAndSort($coaches, $filterName, $filterLocation, $sort);
-
-        // Assert that the result matches the expected outcome
-        $this->assertEquals($expected, $actual);
-    }
-
-    public function testFilterAndSortWithNoMatches()
-    {
-        // Sample coaches data
-        $coaches = [
-            ['id' => 1, 'name' => 'John Doe', 'location' => 'New York, USA', 'hourly_rate' => 50],
-            ['id' => 2, 'name' => 'Jane Doe', 'location' => 'London, UK', 'hourly_rate' => 65],
-            ['id' => 3, 'name' => 'Jim Doe', 'location' => 'New York, USA', 'hourly_rate' => 40],
-            ['id' => 4, 'name' => 'Jill Doe', 'location' => 'Los Angeles, USA', 'hourly_rate' => 70]
-        ];
-
-        // Filter by a non-existent name "Peter" and location "Canada", sort by hourly_rate ascending
-        $filterName = 'Peter';
-        $filterLocation = 'Canada';
-        $sort = 'asc';
-        $expected = [];
-
-        // Call the method
-        $actual = FilterSort::filterAndSort($coaches, $filterName, $filterLocation, $sort);
-
-        // Assert that the result matches the expected outcome
-        $this->assertEquals($expected, $actual);
-    }
-
-    public function testFilterAndSortWithDescendingOrder()
-    {
-        // Sample coaches data
-        $coaches = [
-            ['id' => 1, 'name' => 'John Doe', 'location' => 'New York, USA', 'hourly_rate' => 50],
-            ['id' => 2, 'name' => 'Jane Doe', 'location' => 'London, UK', 'hourly_rate' => 65],
-            ['id' => 3, 'name' => 'Jim Doe', 'location' => 'New York, USA', 'hourly_rate' => 40],
-            ['id' => 4, 'name' => 'Jill Doe', 'location' => 'Los Angeles, USA', 'hourly_rate' => 70]
-        ];
-
-        // Filter by "Doe" in name and "USA" in location, sort by hourly_rate descending
-        $filterName = 'Doe';
-        $filterLocation = 'USA';
-        $sort = 'desc';
-        $expected = [
-            ['id' => 4, 'name' => 'Jill Doe', 'location' => 'Los Angeles, USA', 'hourly_rate' => 70],
-            ['id' => 1, 'name' => 'John Doe', 'location' => 'New York, USA', 'hourly_rate' => 50],
-            ['id' => 3, 'name' => 'Jim Doe', 'location' => 'New York, USA', 'hourly_rate' => 40]
-        ];
-
-        // Call the method
-        $actual = FilterSort::filterAndSort($coaches, $filterName, $filterLocation, $sort);
-
-        // Assert that the result matches the expected outcome
-        $this->assertEquals($expected, $actual);
-    }
-
-    public function testFilterAndSortWithEmptyArray()
-    {
-        // Empty coaches data
-        $coaches = [];
-
-        // Filter by "John" and sort by hourly_rate ascending
-        $filterName = 'John';
-        $filterLocation = '';
-        $sort = 'asc';
-        $expected = [];
-
-        // Call the method
-        $actual = FilterSort::filterAndSort($coaches, $filterName, $filterLocation, $sort);
-
-        // Assert that the result matches the expected outcome
-        $this->assertEquals($expected, $actual);
+        $result = FilterSort::filterAndSort($coaches, $filter, $sort);
+        $this->assertEquals($expected, $result);
     }
 }
+
