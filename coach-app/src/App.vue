@@ -1,10 +1,10 @@
 <template>
   <div id="app">
-    <header>
-      <h1>SuperSpin Coaches</h1>
+    <h1>SuperSpin Coaches</h1>
+    <div class="filter-container">
       <SearchBar @search="handleSearch" />
       <SortDropdown @sort="handleSort" />
-    </header>
+    </div>
     <main>
       <div v-if="loading">Loading...</div>
       <div v-else-if="error" class="error">{{ error }}</div>
