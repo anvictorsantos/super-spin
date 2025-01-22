@@ -15,7 +15,7 @@ class FilterSortTest extends PHPUnit\Framework\TestCase
         ];
 
         // Test filter by name ("John")
-        $filter = 'John'; // Should match "John Smith"
+        $filter = 'John'; // Should match "John Smith" and "Emma Johnson"
         $expected = [
             ['id' => 1, 'name' => 'John Smith', 'hourly_rate' => 50, 'location' => 'New York', 'joined_at' => '2023-05-10'],
             ['id' => 2, 'name' => 'Emma Johnson', 'hourly_rate' => 65, 'location' => 'London', 'joined_at' => '2021-03-15'],
