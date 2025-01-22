@@ -1,54 +1,53 @@
 services:
+  coach-app:
+    build:
+      context: ./coach-app
+    container_name: coach-app
+    ports:
+      - "80:80"
+    volumes:
+      - ./coach-app:/usr/src/app
+      - /usr/src/app/node_modules  # Persist node_modules
+    environment:
+      - VITE_API_URL=http://localhost:8000  # API URL for your frontend to connect
+    networks:
+      - coach-network
+    depends_on:
+      - coach-api 
+
   coach-api:
-    # Define the service for the backend API
-    build: ./coach-api
-    # Specify the Dockerfile location for building the backend API image
+    build:
+      context: ./coach-api
+    container_name: coach-api
     ports:
       - "8000:8000"
-      # Map the container's internal port 8000 to the host's port 8000
     volumes:
-      - ./coach-api:/var/www
-      # Mount the local `coach-api` directory to `/var/www` in the container for real-time development
+      - ./coach-api:/usr/src/app
     depends_on:
-      - db
-      # Ensure the `db` service (database) is started before the backend API starts
-
-  coach-app:
-    # Define the service for the frontend application
-    build: ./coach-app
-    # Specify the Dockerfile location for building the frontend app image
-    ports:
-      - "3000:80"
-      # Map the container's internal port 80 to the host's port 3000
-    volumes:
-      - ./coach-app:/usr/share/nginx/html
-      # Mount the local `coach-app` directory to the container's Nginx web root for live updates
-
-  db:
-    # Define the service for the database
-    image: mysql:8.3.0
-    # Use the MySQL 8.3.0 Docker image
+      - mysql
+    networks:
+      - coach-network
     environment:
-      MYSQL_DATABASE: super-spin
-      # Set the initial database name to `super-spin`
-      MYSQL_USER: 'super-spin-admin'
-      # Create a new user `super-spin-admin` with limited privileges
-      MYSQL_PASSWORD: naotemsenha
-      # Set the password for the `super-spin-admin` user
+      - DB_HOST=mysql
+      - DB_NAME=super-spin
+      - DB_USER=super-spin-admin
+      - DB_PASS=naotemsenha
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    environment:
       MYSQL_ROOT_PASSWORD: naotemsenha
-      # Set the root password for the MySQL server
-    container_name: mysql-db-super-spin
-    # Assign a custom name `mysql-db-super-spin` to the MySQL container
+      MYSQL_DATABASE: super-spin
+      MYSQL_USER: super-spin-admin
+      MYSQL_PASSWORD: naotemsenha
+    volumes:
+      - ./coach-api/database/coach.sql:/docker-entrypoint-initdb.d/coach.sql
     ports:
       - "3306:3306"
-      # Map the container's internal MySQL port 3306 to the host's port 3306
-    expose:
-      - "3306"
-      # Explicitly expose port 3306 for communication between services (optional)
-    volumes:
-      - db_data:/var/lib/mysql
-      # Use the `db_data` volume to persist MySQL data between container restarts
+    networks:
+      - coach-network
 
-volumes:
-  db_data:
-    # Declare a named volume `db_data` to store MySQL data persistently
+networks:
+  coach-network:
+    driver: bridge
