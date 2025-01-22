@@ -8,7 +8,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, Emit } from 'vue'
+import { defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'SearchBar',
