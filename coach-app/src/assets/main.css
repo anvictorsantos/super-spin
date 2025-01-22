@@ -244,3 +244,19 @@ slot[name="footer"] > *:hover {
   color: #777;
   padding: 20px;
 }
+
+.pagination {
+  margin-top: 10px;
+  text-align: center;
+}
+
+button {
+  padding: 5px 10px;
+  margin: 0 5px;
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}

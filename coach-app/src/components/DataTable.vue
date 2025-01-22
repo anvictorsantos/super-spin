@@ -6,7 +6,6 @@
           <th v-for="(item, idx) in fields" :key="idx">
             <span @click="sortBy(item.key)">
               {{ item.label }}
-              <!-- Show ascending or descending icon if the field is sortable -->
               <span v-if="sortableFields.includes(item.key)">
                 <ArrowDownIcon v-if="sortConfig.key === item.key && sortConfig.order === 'desc'" />
                 <ArrowUpIcon v-if="sortConfig.key === item.key && sortConfig.order === 'asc'" />
@@ -16,7 +15,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(item, index) in data" :key="index">
+        <tr v-for="(item, index) in paginatedData" :key="index">
           <td v-for="(field, idx) in fields" :key="idx">
             <span v-if="!hasNamedSlot(field.key)" :item="item">
               {{ item[field.key] }}
@@ -26,11 +25,18 @@
         </tr>
       </tbody>
     </table>
+
+    <!-- Pagination controls -->
+    <div class="pagination">
+      <button @click="prevPage" :disabled="currentPage === 1">Prev</button>
+      <span>Page {{ currentPage }} of {{ totalPages }}</span>
+      <button @click="nextPage" :disabled="currentPage === totalPages">Next</button>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps, defineEmits, onMounted, useSlots } from 'vue'
+import { ref, defineProps, defineEmits, onMounted, computed, useSlots } from 'vue'
 import type { Field } from '@/types/Field'
 import type { RowData } from '@/types/RowData'
 import ArrowUpIcon from '@/component-library/icons/ArrowUpIcon.vue'
@@ -43,56 +49,81 @@ const props = defineProps<{
   sortableFields: string[]
 }>()
 
-// Define the emits with correct typing for event names and parameters
+// Define the emits
 const emit = defineEmits<{
   (e: 'rowSelected', selectedRow: RowData): void
   (e: 'sortChanged', sortConfig: { key: string; order: 'asc' | 'desc' }): void
 }>()
 
-// Access slots using useSlots() and define its type
 const slots = useSlots() as Record<string, unknown>
 
-// Sorting configuration with strict types for order
+// Sorting configuration
 const sortConfig = ref<{ key: string; order: 'asc' | 'desc' }>({ key: '', order: 'asc' })
 
-// Function to check for named slots
+// Pagination configuration
+const itemsPerPage = 5
+const currentPage = ref(1)
+
+// Computed: Total pages based on the data and items per page
+const totalPages = computed(() => {
+  return Math.ceil(props.data.length / itemsPerPage)
+})
+
+// Computed: Data for the current page after sorting
+const paginatedData = computed(() => {
+  const sortedData = [...props.data]
+
+  // Sort the data
+  sortedData.sort((a, b) => {
+    if (a[sortConfig.value.key] < b[sortConfig.value.key]) {
+      return sortConfig.value.order === 'asc' ? -1 : 1
+    }
+    if (a[sortConfig.value.key] > b[sortConfig.value.key]) {
+      return sortConfig.value.order === 'asc' ? 1 : -1
+    }
+    return 0
+  })
+
+  // Paginate the data
+  const start = (currentPage.value - 1) * itemsPerPage
+  const end = start + itemsPerPage
+  return sortedData.slice(start, end)
+})
+
+// Check for named slots
 const hasNamedSlot = (slotName: string) => !!slots[slotName]
 
-// Initialize default sorting based on the first sortable field when the component is mounted
+// Initialize default sorting
 onMounted(() => {
   if (props.sortableFields.length > 0) {
-    // Set the default sortConfig to the first sortable field
     sortConfig.value.key = props.sortableFields[0]
     sortConfig.value.order = 'asc'
-    // Emit event to indicate the initial sort
     emit('sortChanged', sortConfig.value)
   }
 })
 
 // Sort the table based on a specific field and order
 const sortBy = (key: string) => {
-  // Check if it's the same column
   if (sortConfig.value.key === key) {
-    // Toggle sorting order if the same column is clicked
     sortConfig.value.order = sortConfig.value.order === 'asc' ? 'desc' : 'asc'
   } else {
-    // Set new column and default to ascending order
     sortConfig.value.key = key
     sortConfig.value.order = 'asc'
   }
-
-  // Emit event to update sorted data in the parent component
   emit('sortChanged', sortConfig.value)
+}
 
-  // Sort data based on the selected column and order
-  props.data.sort((a, b) => {
-    if (a[key] < b[key]) {
-      return sortConfig.value.order === 'asc' ? -1 : 1
-    }
-    if (a[key] > b[key]) {
-      return sortConfig.value.order === 'asc' ? 1 : -1
-    }
-    return 0
-  })
+// Pagination: Navigate to the previous page
+const prevPage = () => {
+  if (currentPage.value > 1) {
+    currentPage.value -= 1
+  }
+}
+
+// Pagination: Navigate to the next page
+const nextPage = () => {
+  if (currentPage.value < totalPages.value) {
+    currentPage.value += 1
+  }
 }
 </script>
