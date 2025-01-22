@@ -1,3 +1,7 @@
+<p align="center">
+<img src="/coach-app/src/assets/super-spin-logo.webp)" />
+</p>
+
 # SuperSpin
 
 SuperSpin is a startup based in Cairo, Egypt, with the vision of becoming the "Ultimate Marketplace for Table Tennis Players." It connects Table Tennis Players with professional Coaches for one-on-one training sessions.
