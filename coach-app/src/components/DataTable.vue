@@ -1,13 +1,5 @@
 <template>
   <div>
-    <div v-if="header">
-      <h2>
-        {{ header.title }}
-      </h2>
-      <p>
-        {{ header.description }}
-      </p>
-    </div>
     <table>
       <thead>
         <tr>
@@ -53,21 +45,8 @@
 
 <script lang="ts">
 import { defineComponent, type PropType, ref } from 'vue'
-
-interface Field {
-  key: string
-  label: string
-}
-
-interface Header {
-  title: string
-  description: string
-}
-
-interface RowData {
-  [key: string]: any
-  selected?: boolean
-}
+import type { Field } from '@/types/Field'
+import type { RowData } from '@/types/RowData'
 
 export default defineComponent({
   name: 'TableComponent',
@@ -76,11 +55,6 @@ export default defineComponent({
       type: Array as PropType<RowData[]>,
       required: true,
       default: () => [],
-    },
-    header: {
-      type: Object as PropType<Header | null>,
-      required: false,
-      default: null,
     },
     fields: {
       type: Array as PropType<Field[]>,
@@ -92,7 +66,6 @@ export default defineComponent({
       required: false,
       default: false,
     },
-    // Prop to specify which columns are sortable
     sortableFields: {
       type: Array as PropType<string[]>,
       required: true,
@@ -103,24 +76,18 @@ export default defineComponent({
   setup(props, { emit, slots }) {
     const hasNamedSlot = (slotName: string) => !!slots[slotName]
 
-    // Sorting configuration: key (field) and order ('asc' or 'desc')
     const sortConfig = ref({ key: '', order: 'asc' })
 
     const sortBy = (key: string) => {
-      // Check if it's the same column
       if (sortConfig.value.key === key) {
-        // Toggle sorting order if the same column is clicked
         sortConfig.value.order = sortConfig.value.order === 'asc' ? 'desc' : 'asc'
       } else {
-        // Set new column and default to ascending order
         sortConfig.value.key = key
         sortConfig.value.order = 'asc'
       }
 
-      // Emit event to update sorted data in the parent component
       emit('sortChanged', sortConfig.value)
 
-      // Sort data based on the selected column and order
       props.data.sort((a, b) => {
         if (a[key] < b[key]) {
           return sortConfig.value.order === 'asc' ? -1 : 1

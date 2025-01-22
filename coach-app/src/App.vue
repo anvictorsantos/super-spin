@@ -3,7 +3,6 @@
     <h1 class="text-center">SuperSpin Coaches</h1>
     <div class="filter-container">
       <SearchBar @search="handleSearch" />
-      <!-- <SortDropdown @sort="handleSort" /> -->
     </div>
     <main>
       <div v-if="loading">Loading...</div>
@@ -81,10 +80,6 @@ export default {
       searchQuery.value = query
     }
 
-    const handleSort = (option: 'asc' | 'desc' | null) => {
-      sortOption.value = option
-    }
-
     onMounted(fetchCoaches)
 
     return {
@@ -94,7 +89,6 @@ export default {
       loading,
       error,
       handleSearch,
-      handleSort,
       fields,
     }
   },
