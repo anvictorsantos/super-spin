@@ -4,140 +4,96 @@ namespace Controllers;
 
 use Gateways\CoachGateway;
 use Helpers\FilterSort;
+use Helpers\ValidationHelper;
 
 class CoachController
 {
     public function __construct(private CoachGateway $gateway) {}
 
-    public function processRequest(string $method, ?string $id): void
+    public function getAllCoaches(): string
     {
-        if ($id) {
-            $this->processResourceRequest($method, $id);
-        } else {
-            $this->processCollectionRequest($method);
+        $filter = $_GET['filter'] ?? '';
+        $sort = $_GET['sort'] ?? 'asc';
+
+        $coaches = $this->gateway->getAll();
+
+        if (!empty($filter) || !empty($sort)) {
+            $coaches = FilterSort::filterAndSort($coaches, $filter, $sort);
         }
+
+        return json_encode($coaches);
     }
 
-    private function processResourceRequest(string $method, string $id): void
+    public function createCoach(): string
+    {
+        $data = (array) json_decode(file_get_contents("php://input"), true);
+
+        // Define required fields for coach creation
+        $requiredFields = ['name', 'years_of_experience', 'hourly_rate', 'location', 'joined_at'];
+
+        // Use ValidationHelper for validation
+        $errors = ValidationHelper::getValidationErrors($data, $requiredFields);
+
+        if (!empty($errors)) {
+            http_response_code(422);
+            return json_encode(['errors' => $errors]);
+        }
+
+        $id = $this->gateway->create($data);
+
+        http_response_code(201);
+        return json_encode(['message' => 'Coach registered', 'id' => $id]);
+    }
+
+    public function getCoach($id): string
     {
         $coach = $this->gateway->get($id);
 
         if (!$coach) {
             http_response_code(404);
-            echo json_encode(["message" => "Coach not found"]);
-            return;
+            return json_encode(['message' => 'Coach not found']);
         }
 
-        switch ($method) {
-            case "GET":
-                echo json_encode($coach);
-                break;
-
-            case "PATCH":
-                $data = (array) json_decode(file_get_contents("php://input"), true);
-
-                $errors = $this->getValidationErrors($data, false);
-
-                if (!empty($errors)) {
-                    http_response_code(422);
-                    echo json_encode(["errors" => $errors]);
-                    break;
-                }
-
-                $rows = $this->gateway->update($coach, $data);
-
-                echo json_encode([
-                    "message" => "Coach $id updated",
-                    "rows" => $rows
-                ]);
-                break;
-
-            case "DELETE":
-                $rows = $this->gateway->delete($id);
-
-                echo json_encode([
-                    "message" => "Coach $id deleted",
-                    "rows" => $rows
-                ]);
-                break;
-
-            default:
-                http_response_code(405);
-                header("Allow: GET, PATCH, DELETE");
-                break;
-        }
+        return json_encode($coach);
     }
 
-    private function processCollectionRequest(string $method): void
+    public function updateCoach($id): string
     {
-        switch ($method) {
-            case 'GET':
-                // Retrieve filter and sort parameters from the query string
-                $filter = $_GET['filter'] ?? ''; // Single filter for name or location
-                $sort = $_GET['sort'] ?? 'asc'; // Sort order (default to ascending)
+        $data = (array) json_decode(file_get_contents("php://input"), true);
 
-                $coaches = $this->gateway->getAll(); // Get all coaches from the gateway
+        $coach = $this->gateway->get($id);
 
-                // Apply filter and sort using the helper function
-                if (!empty($filter) || !empty($sort)) {
-                    $coaches = FilterSort::filterAndSort($coaches, $filter, $sort);
-                }
-
-                // Return the filtered and sorted coaches as JSON
-                echo json_encode($coaches);
-                break;
-
-            case "POST":
-                $data = (array) json_decode(file_get_contents("php://input"), true);
-
-                $errors = $this->getValidationErrors($data);
-
-                if (!empty($errors)) {
-                    http_response_code(422);
-                    echo json_encode(["errors" => $errors]);
-                    break;
-                }
-
-                $id = $this->gateway->create($data);
-
-                http_response_code(201);
-                echo json_encode([
-                    "message" => "Coach registered",
-                    "id" => $id
-                ]);
-                break;
-
-            default:
-                http_response_code(405);
-                header("Allow: GET, POST");
-                break;
+        if (!$coach) {
+            http_response_code(404);
+            return json_encode(['message' => 'Coach not found']);
         }
+
+        // Define required fields for updating
+        $requiredFields = ['name', 'years_of_experience', 'hourly_rate', 'location', 'joined_at'];
+
+        $errors = ValidationHelper::getValidationErrors($data, $requiredFields, false);
+
+        if (!empty($errors)) {
+            http_response_code(422);
+            return json_encode(['errors' => $errors]);
+        }
+
+        $rows = $this->gateway->update($coach, $data);
+
+        return json_encode(['message' => "Coach $id updated", 'rows' => $rows]);
     }
 
-    private function getValidationErrors(array $data, bool $is_new = true): array
+    public function deleteCoach($id): string
     {
-        $errors = [];
+        $coach = $this->gateway->get($id);
 
-        if ($is_new && empty($data['name'])) {
-            $errors[] = "name is required";
+        if (!$coach) {
+            http_response_code(404);
+            return json_encode(['message' => 'Coach not found']);
         }
 
-        if ($is_new && empty($data['years_of_experience'])) {
-            $errors[] = "years_of_experience is required";
-        }
+        $rows = $this->gateway->delete($id);
 
-        if ($is_new && empty($data['hourly_rate'])) {
-            $errors[] = "hourly_rate is required";
-        }
-
-        if ($is_new && empty($data['location'])) {
-            $errors[] = "location is required";
-        }
-
-        if ($is_new && empty($data['joined_at'])) {
-            $errors[] = "joined_at is required";
-        }
-
-        return $errors;
+        return json_encode(['message' => "Coach $id deleted", 'rows' => $rows]);
     }
 }
