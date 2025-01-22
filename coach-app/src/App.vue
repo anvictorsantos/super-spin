@@ -43,7 +43,10 @@ export default {
     const fetchCoaches = async () => {
       try {
         const response = await apiClient.get('/coaches') // Use the Axios instance
-        coaches.value = response.data
+        coaches.value = response.data.map((coach: Coach) => ({
+          ...coach,
+          joined_at: new Date(coach.joined_at).toLocaleDateString(),
+        }))
       } catch (err) {
         error.value = 'Failed to load coaches. Please try again later.'
       } finally {
