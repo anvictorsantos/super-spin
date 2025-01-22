@@ -29,30 +29,73 @@ This frontend project is part of SuperSpin's initiative to create a responsive a
 ## Folder Structure
 ```plaintext
 /coach-app
+├── env.d.ts          # TypeScript environment declarations
+├── eslint.config.ts  # ESLint configuration file for linting
 ├── index.html        # Main HTML file
-├── styles.css        # CSS file for styling
-├── script.js         # JavaScript file for interactivity
-├── README.md         # Documentation for the frontend
+├── package-lock.json # Package lock file for dependencies
+├── package.json      # Project metadata and dependencies
+├── public
+│   └── favicon.ico   # Favicon for the web application
+├── src
+│   ├── App.vue       # Main Vue.js component that controls app structure
+│   ├── assets
+│   │   └── main.css  # Global CSS styles for the application
+│   ├── component-library
+│   │   └── icons
+│   │       ├── ArrowDownIcon.vue  # Icon component for down arrow
+│   │       └── ArrowUpIcon.vue    # Icon component for up arrow
+│   ├── components
+│   │   ├── DataTable.vue          # Data table component displaying coach info
+│   │   ├── SearchBar.vue          # Search bar component for filtering coaches
+│   │   └── SortDropdown.vue       # Sort dropdown component for sorting by hourly rate
+│   ├── main.ts                    # Main entry file for Vue app setup
+│   ├── services
+│   │   └── axios.ts               # Axios service for API calls (e.g., fetching coach data)
+│   └── types
+│       ├── Coach.ts               # Type definition for Coach object
+│       ├── Field.ts               # Type definition for Field (e.g., coach field data)
+│       └── RowData.ts             # Type definition for RowData (e.g., individual row in DataTable)
+├── tests
+│   └── DataTable.test.ts          # Unit test for DataTable component
+├── tsconfig.app.json             # TypeScript configuration for app
+├── tsconfig.json                 # General TypeScript configuration
+├── tsconfig.node.json            # TypeScript configuration for Node.js
+└── vite.config.ts                # Vite configuration file for project build setups
 ```
 
 ## How to Run
 1. Clone or download the repository.
-2. Open `index.html` in any modern web browser.
+2. Install dependencies:
+```
+npm install
+```
+3. Run the development server:
+```
+npm run dev
+```
 
 ## Development Details
 
-### HTML (`index.html`)
-- Contains the structure for the Coach Listing Page.
-- Includes placeholders for dynamic data like coach details.
+### Vue Components
 
-### CSS (`styles.css`)
-- Implements the grid layout for displaying coaches.
-- Uses media queries to adjust layout and styles for different screen sizes.
-- Provides styling for the search bar and sort dropdown.
+- **App.vue**: The main component that includes the global layout of the application.
+- **DataTable.vue**: Displays the list of coaches in a grid, with sortable and filterable columns.
+- **SearchBar.vue**: Provides the UI for users to search coaches by name or location.
+- **SortDropdown.vue**: A dropdown for sorting coaches by their hourly rate (ascending/descending).
 
-### JavaScript (`script.js`)
-- Dynamically filters the list of coaches based on user input in the search bar.
-- Sorts the displayed coaches by hourly rate (ascending/descending) when selected in the dropdown.
+### TypeScript Services
+
+- **axios.ts**: Contains a service to handle HTTP requests (e.g., fetching coach data).
+
+### Styling
+
+- **main.css**: Contains the styles for the layout, including the grid and media queries for responsive design.
+
+### TypeScript Types
+
+- **Coach.ts**: Type definitions for the coach object.
+- **Field.ts**: Defines the fields used in the grid (e.g., name, location).
+- **RowData.ts**: Type definition for each individual row in the table.
 
 ## Example Features
 
@@ -72,13 +115,15 @@ This frontend project is part of SuperSpin's initiative to create a responsive a
 - **Mobile**: Stacks coaches vertically for a seamless scrolling experience.
 
 ## Future Enhancements
-- Fetch coach data dynamically from the backend API.
+- ~~Fetch coach data dynamically from the backend API.~~
 - Add animations for smooth transitions during filtering and sorting.
-- Implement pagination for large datasets.s
+- ~~Implement pagination for large datasets.s~~
 
 ## Coach Listing RESTful API
 
 This RESTful API powers the Coach Listing Frontend, showcasing available coaches and allowing users to filter and sort through them.
+
+# Coach API Documentation
 
 ## Features
 - **Coach Listing**: Displays a list of predefined coaches.
@@ -98,48 +143,85 @@ Fetch a list of coaches with optional filtering and sorting.
 ### Query Parameters
 | Parameter    | Type   | Description                                      |
 |--------------|--------|--------------------------------------------------|
-| `name`       | String | Filter coaches by name (case-insensitive).      |
-| `location`   | String | Filter coaches by location (case-insensitive).  |
+| `filter`       | String | Filter coaches by name or location (case-insensitive).      |
 | `sort`       | String | Sort coaches by `hourly_rate`.                  |
 
 ### Example Usage
-Fetch all coaches from Lisbon, sorted by hourly rate:
+#### GET - Fetch all coaches from Lisbon, sorted by hourly rate:
 ```bash
-curl "http://localhost/coach-api/src/api.php?location=lisbon&sort=hourly_rate"
+curl "http://localhost:8000/coaches?filter=lisbon&sort=asc"
+```
+
+#### POST - Create a new coach:
+```bash
+curl -X POST "http://localhost:8000/coaches" \
+-H "Content-Type: application/json" \
+-d '{
+  "name": "John Doe",
+  "years_of_experience": 5,
+  "hourly_rate": 50,
+  "location": "Lisbon,Portugal",
+  "joined_at": "2025-01-27"
+}'
+```
+
+#### DELETE - Delete a specific coach by ID:
+```
+curl -X DELETE "http://localhost:8000/coaches/1"
+```
+
+#### PATCH - Update a coach's hourly rate:
+```
+curl -X PATCH "http://localhost:8000/coaches/1" \
+-H "Content-Type: application/json" \
+-d '{
+  "hourly_rate": 55
+}'
 ```
 
 ## Folder Structure
-```plaintext
+```
 /coach-api
 ├── /src
-│   ├── database.php       # Mock data source
-│   ├── filter_and_sort.php # Filtering and sorting logic
-│   ├── api.php            # Main API entry point
+│   ├── /Controllers
+│   │   └── CoachController.php       # Handles coach-related logic.
+│   ├── /Database
+│   │   └── Database.php             # Database connection and queries.
+│   ├── /Gateways
+│   │   └── CoachGateway.php         # Responsible for fetching coaches from database.
+│   ├── /Helpers
+│   │   ├── FilterSort.php           # Contains filtering and sorting logic.
+│   │   └── ValidationHelper.php    # Helper functions for input validation.
+│   ├── /Utilities
+│   │   └── ErrorHandler.php         # Handles error responses.
 ├── /tests
-│   ├── test_api.php       # Test script for the API
-├── .htaccess              # For Apache server configuration (optional)
-├── composer.json          # For dependency management (optional)
-└── README.md              # Documentation for the API
+│   ├── DatabaseTest.php             # Test script for database-related logic.
+│   ├── FilterSortTest.php           # Test script for filtering and sorting logic.
+├── /public
+│   └── index.php                   # Entry point for the application.
+├── composer.json                   # For dependency management.
+├── composer.lock                   # Lock file for dependencies.
+└── README.md                       # Documentation for the API.
 ```
 
 ## Running the API
 1. Clone or download the repository.
 2. Host the folder on a PHP server (e.g., Apache or PHP's built-in server).
-3. Access the API endpoint using your browser or a tool like `curl` or Postman.
+3. Access the API endpoint using your browser or a tool like curl or Postman.
 
 ## Tests
 Run tests with:
-```bash
-php tests/test_api.php
+```
+php tests/DatabaseTest.php
+php tests/FilterSortTest.php
 ```
 
-### Test Cases
-- **Filter by Name**: Ensures filtering by coach name works correctly.
-- **Filter by Location**: Validates location-based filtering.
-- **Sort by Hourly Rate**: Confirms sorting logic by hourly rates.
+## Test Cases
+- Filter by Name: Ensures filtering by coach name works correctly.
+- Filter by Location: Validates location-based filtering.
+- Sort by Hourly Rate: Confirms sorting logic by hourly rates.
 
 ## Future Enhancements
-- Connect to a real database to dynamically manage coaches.
-- Add authentication for secure API usage.
+- ~~Connect to a real database to dynamically manage coaches.~~
+- ~~Add authentication for secure API usage.~~
 - Implement pagination for large coach datasets.
-
