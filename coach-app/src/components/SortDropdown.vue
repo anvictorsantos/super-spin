@@ -25,7 +25,6 @@ export default defineComponent({
 
 <style scoped>
 .sort-dropdown {
-  width: 100%;
   padding: 0.5rem;
   margin: 1rem 0;
   border: 1px solid #ccc;

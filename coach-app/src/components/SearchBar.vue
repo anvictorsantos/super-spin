@@ -30,6 +30,6 @@ export default defineComponent({
   padding: 0.5rem;
   margin: 1rem 0;
   border: 1px solid #ccc;
-  border-radius: 4px;
+  border-radius: 20px;
 }
 </style>
