@@ -30,22 +30,25 @@ export default {
     const error = ref<string | null>(null)
     const searchQuery = ref('')
     const sortOption = ref<'asc' | 'desc' | null>(null)
-    const fields = [
-      { key: 'id', label: 'ID' },
-      { key: 'name', label: 'Name' },
-      { key: 'years_of_experience', label: 'Years of Experience' },
-      { key: 'hourly_rate', label: 'Hourly Rate' },
-      { key: 'location', label: 'Location' },
-      { key: 'joined_at', label: 'Joined At' },
-    ]
+    const fields = ref<any[]>([]) // Will be dynamically set
+    const sortableFields = ref<string[]>(['hourly_rate']) // Static for now, can be enhanced as per the API fields
 
     const fetchCoaches = async () => {
       try {
-        const response = await apiClient.get('/coaches')
+        const response = await apiClient.get('/coaches') // Use the Axios instance
         coaches.value = response.data.map((coach: Coach) => ({
           ...coach,
           joined_at: new Date(coach.joined_at).toLocaleDateString(),
         }))
+
+        // Dynamically set the fields based on the response keys
+        if (coaches.value.length > 0) {
+          const firstCoach = coaches.value[0]
+          fields.value = Object.keys(firstCoach).map((key) => ({
+            key,
+            label: key.charAt(0).toUpperCase() + key.slice(1).replace('_', ' '), // Format key to label
+          }))
+        }
       } catch (err) {
         error.value = 'Failed to load coaches. Please try again later.'
       } finally {
@@ -73,8 +76,6 @@ export default {
 
       return result
     })
-
-    const sortableFields = ['hourly_rate']
 
     const handleSearch = (query: string) => {
       searchQuery.value = query
