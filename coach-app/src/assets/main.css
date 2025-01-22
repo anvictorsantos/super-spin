@@ -232,10 +232,6 @@ slot[name="footer"] > *:hover {
   text-align: center;
 }
 
-.sortable-header {
-  cursor: pointer;
-}
-
 .asc-icon,
 .desc-icon {
   font-size: 12px;

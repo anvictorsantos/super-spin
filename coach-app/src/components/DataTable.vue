@@ -4,18 +4,12 @@
       <thead>
         <tr>
           <th v-for="(item, idx) in fields" :key="idx">
-            <span @click="sortBy(item.key)" class="sortable-header">
+            <span @click="sortBy(item.key)">
               {{ item.label }}
               <!-- Show ascending or descending icon if the field is sortable -->
               <span v-if="sortableFields.includes(item.key)">
-                <i v-if="sortConfig.key === item.key && sortConfig.order === 'asc'" class="asc-icon"
-                  >▲</i
-                >
-                <i
-                  v-if="sortConfig.key === item.key && sortConfig.order === 'desc'"
-                  class="desc-icon"
-                  >▼</i
-                >
+                <ArrowDownIcon v-if="sortConfig.key === item.key && sortConfig.order === 'desc'" />
+                <ArrowUpIcon v-if="sortConfig.key === item.key && sortConfig.order === 'asc'" />
               </span>
             </span>
           </th>
@@ -32,16 +26,15 @@
         </tr>
       </tbody>
     </table>
-    <div v-if="hasNamedSlot('footer')">
-      <slot name="footer" />
-    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps, defineEmits, useSlots } from 'vue'
+import { ref, defineProps, defineEmits, onMounted, useSlots } from 'vue'
 import type { Field } from '@/types/Field'
 import type { RowData } from '@/types/RowData'
+import ArrowUpIcon from '@/component-library/icons/ArrowUpIcon.vue'
+import ArrowDownIcon from '@/component-library/icons/ArrowDownIcon.vue'
 
 // Define the props
 const props = defineProps<{
@@ -64,6 +57,17 @@ const sortConfig = ref<{ key: string; order: 'asc' | 'desc' }>({ key: '', order:
 
 // Function to check for named slots
 const hasNamedSlot = (slotName: string) => !!slots[slotName]
+
+// Initialize default sorting based on the first sortable field when the component is mounted
+onMounted(() => {
+  if (props.sortableFields.length > 0) {
+    // Set the default sortConfig to the first sortable field
+    sortConfig.value.key = props.sortableFields[0]
+    sortConfig.value.order = 'asc'
+    // Emit event to indicate the initial sort
+    emit('sortChanged', sortConfig.value)
+  }
+})
 
 // Sort the table based on a specific field and order
 const sortBy = (key: string) => {
