@@ -236,3 +236,7 @@ slot[name="footer"] > *:hover {
     width: 100%; /* Make the search bar and dropdown take full width */
   }
 }
+
+.text-center {
+  text-align: center;
+}

@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <h1>SuperSpin Coaches</h1>
+    <h1 class="text-center">SuperSpin Coaches</h1>
     <div class="filter-container">
       <SearchBar @search="handleSearch" />
       <SortDropdown @sort="handleSort" />
