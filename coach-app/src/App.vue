@@ -8,7 +8,7 @@
     <main>
       <div v-if="loading">Loading...</div>
       <div v-else-if="error" class="error">{{ error }}</div>
-      <CoachGrid v-else :coaches="filteredCoaches" />
+      <DataTable :fields="fields" :data="filteredCoaches" />
     </main>
   </div>
 </template>
@@ -16,20 +16,29 @@
 <script lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import apiClient from '@/services/axios' // Import the Axios instance
-import CoachGrid from '@/components/CoachGrid.vue'
 import SearchBar from '@/components/SearchBar.vue'
 import SortDropdown from '@/components/SortDropdown.vue'
+import DataTable from '@/components/DataTable.vue'
 import type { Coach } from '@/types/Coach'
 
 export default {
   name: 'App',
-  components: { CoachGrid, SearchBar, SortDropdown },
+  components: { SearchBar, SortDropdown, DataTable },
   setup() {
     const coaches = ref<Coach[]>([])
     const loading = ref(true)
     const error = ref<string | null>(null)
     const searchQuery = ref('')
     const sortOption = ref<'asc' | 'desc' | null>(null)
+    const fields = [
+      { key: 'id', label: 'ID' },
+      { key: 'name', label: 'Name' },
+      { key: 'years_of_experience', label: 'Years of Experience' },
+      { key: 'hourly_rate', label: 'Hourly Rate' },
+      { key: 'hourly_rate', label: 'Hourly Rate' },
+      { key: 'location', label: 'Location' },
+      { key: 'joined_at', label: 'Joined At' },
+    ]
 
     const fetchCoaches = async () => {
       try {
@@ -80,6 +89,7 @@ export default {
       error,
       handleSearch,
       handleSort,
+      fields,
     }
   },
 }
