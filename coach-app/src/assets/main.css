@@ -87,40 +87,6 @@ input[type="checkbox"]:focus {
   box-shadow: 0 0 4px rgba(0, 102, 204, 0.5);
 }
 
-/* Responsive Table */
-@media (max-width: 768px) {
-  table {
-    font-size: 0.9rem;
-  }
-
-  th, td {
-    padding: 12px;
-  }
-
-  h2 {
-    font-size: 1.4rem;
-  }
-
-  p {
-    font-size: 0.9rem;
-  }
-}
-
-@media (max-width: 480px) {
-  th, td {
-    padding: 8px;
-  }
-
-  table {
-    font-size: 0.8rem;
-  }
-
-  input[type="checkbox"] {
-    width: 16px;
-    height: 16px;
-  }
-}
-
 /* Slot Styles (Custom Styling for Named Slots) */
 span {
   display: inline-block;
@@ -169,42 +135,34 @@ slot[name="footer"] > *:hover {
   margin: 20px auto;
 }
 
-/* Styling for the search bar */
-.search-bar {
-  flex: 1; /* Takes up available space */
-  padding: 12px;
-  font-size: 1rem;
-  border-radius: 5px;
-  border: 20px solid #ccc;
-  background-color: #fff;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  transition: border 0.3s, box-shadow 0.3s;
-}
-
-.search-bar:focus {
-  border-color: #0066cc;
-  box-shadow: 0 0 4px rgba(0, 102, 204, 0.5);
-  outline: none;
-}
-
-/* Styling for the dropdown */
+/* Common input and dropdown styling */
+.search-bar,
 .sort-dropdown {
-  flex: 0 0 auto; /* Dropdown doesn't grow to fill space */
   padding: 12px;
   font-size: 1rem;
   border-radius: 5px;
   border: 1px solid #ccc;
   background-color: #fff;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  appearance: none; /* Remove default dropdown arrow */
-  cursor: pointer;
   transition: border 0.3s, box-shadow 0.3s;
 }
 
+.search-bar:focus,
 .sort-dropdown:focus {
   border-color: #0066cc;
   box-shadow: 0 0 4px rgba(0, 102, 204, 0.5);
   outline: none;
+}
+
+/* Specific input and dropdown styles */
+.search-bar {
+  flex: 1;
+}
+
+.sort-dropdown {
+  flex: 0 0 auto;
+  appearance: none;
+  cursor: pointer;
 }
 
 /* Custom dropdown arrow */
@@ -212,7 +170,7 @@ slot[name="footer"] > *:hover {
   content: " ▼";
 }
 
-/* Add some custom styles for the options inside the dropdown */
+/* Add custom styles for the options inside the dropdown */
 .sort-dropdown option {
   font-size: 1rem;
   padding: 10px;
@@ -232,11 +190,44 @@ slot[name="footer"] > *:hover {
     gap: 10px;
   }
 
-  .search-bar {
-    width: 100%; /* Make the search bar and dropdown take full width */
+  .search-bar,
+  .sort-dropdown {
+    width: 100%;
+  }
+
+  h2 {
+    font-size: 1.4rem;
+  }
+
+  p {
+    font-size: 0.9rem;
+  }
+
+  table {
+    font-size: 0.9rem;
+  }
+
+  th, td {
+    padding: 12px;
   }
 }
 
+@media (max-width: 480px) {
+  input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+  }
+
+  th, td {
+    padding: 8px;
+  }
+
+  table {
+    font-size: 0.8rem;
+  }
+}
+
+/* Additional Utility Styles */
 .text-center {
   text-align: center;
 }
@@ -251,27 +242,9 @@ slot[name="footer"] > *:hover {
   margin-left: 5px;
 }
 
-.sortable-header {
-  cursor: pointer;
-}
-
-.asc-icon,
-.desc-icon {
-  font-size: 12px;
-  margin-left: 5px;
-}
-
-.search-bar {
-  width: 100%;
-  padding: 0.5rem;
-  margin: 1rem 0;
-  border: 1px solid #ccc;
-  border-radius: 20px;
-}
-
-.sort-dropdown {
-  padding: 0.5rem;
-  margin: 1rem 0;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+.no-records {
+  text-align: center;
+  font-size: 18px;
+  color: #777;
+  padding: 20px;
 }
