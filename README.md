@@ -9,6 +9,8 @@ SuperSpin is dedicated to growing the Table Tennis community by providing an acc
 
 This frontend project is part of SuperSpin's initiative to create a responsive and user-friendly Coach Listing Page, connecting Table Tennis Players with professional Coaches.
 
+![This is the demo](./coach-app/src/assets/super-spin-demo.gif)
+
 ## Features
 
 ### Responsive Coach Listing Page
