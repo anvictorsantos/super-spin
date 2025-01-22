@@ -4,6 +4,7 @@
     class="search-bar"
     placeholder="Search by name or location..."
     @input="onInput"
+    autocomplete="name"
   />
 </template>
 

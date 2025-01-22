@@ -1,29 +1,26 @@
 <template>
-  <div id="app">
-    <header class="header-container">
-      <h1 role="heading" aria-level="1">SuperSpin Coaches</h1>
-      <SearchBar @search="handleSearch" aria-label="Search Coaches" />
-    </header>
+  <nav>
+    <a class="sr-only" href="#main-content">Skip to main content</a>
+  </nav>
 
-    <main>
-      <!-- Provide ARIA live region for loading and error messages -->
-      <div v-if="loading" role="status" aria-live="polite">Loading...</div>
-      <div v-else-if="error" class="error" role="alert" aria-live="assertive">{{ error }}</div>
-
-      <!-- Pass the filtered data to the DataTable and ensure it's properly announced to screen readers -->
-      <DataTable
-        :fields="fields"
-        :data="filteredCoaches"
-        :sortableFields="sortableFields"
-        aria-labelledby="coach-table"
-      >
-        <!-- Show 'No records found' message if there are no filtered coaches -->
-        <template #no-records v-if="filteredCoaches.length === 0">
-          <p class="no-records" role="alert">No records found</p>
-        </template>
-      </DataTable>
-    </main>
+  <div class="header-container">
+    <h1 id="main-content" tabindex="-1" role="heading" aria-level="1">SuperSpin Coaches</h1>
+    <SearchBar @search="handleSearch" aria-label="Search Coaches" />
   </div>
+
+  <main>
+    <!-- Provide ARIA live region for loading and error messages -->
+    <div v-if="loading" role="status" aria-live="polite">Loading...</div>
+    <div v-else-if="error" class="error" role="alert" aria-live="assertive">{{ error }}</div>
+
+    <!-- Pass the filtered data to the DataTable and ensure it's properly announced to screen readers -->
+    <DataTable :fields="fields" :data="filteredCoaches" :sortableFields="sortableFields">
+      <!-- Show 'No records found' message if there are no filtered coaches -->
+      <template #no-records v-if="filteredCoaches.length === 0">
+        <p class="no-records" role="alert">No records found</p>
+      </template>
+    </DataTable>
+  </main>
 </template>
 
 <script setup lang="ts">
