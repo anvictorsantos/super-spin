@@ -63,7 +63,7 @@ This frontend project is part of SuperSpin's initiative to create a responsive a
 └── vite.config.ts                # Vite configuration file for project build setups
 ```
 
-## How to Run
+## How to Run (stand-alone)
 1. Clone or download the repository.
 2. Install dependencies:
 ```
@@ -137,9 +137,6 @@ This RESTful API powers the Coach Listing Frontend, showcasing available coaches
 
 ## API Endpoint
 
-### `GET /api.php`
-Fetch a list of coaches with optional filtering and sorting.
-
 ### Query Parameters
 | Parameter    | Type   | Description                                      |
 |--------------|--------|--------------------------------------------------|
@@ -206,14 +203,32 @@ curl -X PATCH "http://localhost:8000/coaches/1" \
 
 ## Running the API
 1. Clone or download the repository.
-2. Host the folder on a PHP server (e.g., Apache or PHP's built-in server).
-3. Access the API endpoint using your browser or a tool like curl or Postman.
+2. Install dependencies:
+```
+composer install
+```
+2. Host the folder on a PHP server (e.g., Apache or PHP's built-in server):
+```
+php -S localhost:8000 -t public    
+```
+3. Access the API endpoint using your browser or a tool like curl or Postman
+
+## How to Run (stand-alone)
+1. Clone or download the repository.
+2. Install dependencies:
+```
+npm install
+```
+3. Run the development server:
+```
+npm run dev
+```
 
 ## Tests
 Run tests with:
 ```
-php tests/DatabaseTest.php
-php tests/FilterSortTest.php
+vendor/bin/phpunit --bootstrap vendor/autoload.php tests/DatabaseTest.php
+vendor/bin/phpunit --bootstrap vendor/autoload.php tests/FilterSortTest.php
 ```
 
 ## Test Cases
@@ -225,3 +240,47 @@ php tests/FilterSortTest.php
 - ~~Connect to a real database to dynamically manage coaches.~~
 - ~~Add authentication for secure API usage.~~
 - Implement pagination for large coach datasets.
+
+# Docker
+
+By using Docker and Docker Compose, this project ensures a consistent and isolated development environment for all components. Docker containers make it easy to set up, run, and scale the application across different environments without worrying about system dependencies or configuration issues.
+
+## Commands to Run the Application
+1. Build the Docker Images
+```
+docker-compose up --build
+```
+2. Check Logs to Verify Services are Running For coach-app:
+```
+docker logs coach-app
+```
+For coach-api:
+```
+docker logs coach-api
+```
+For mysql:
+```
+docker logs mysql
+```
+3. Access the Frontend (coach-app) Open your browser and go to:
+```
+http://localhost:80
+```
+4. Access the Backend API (coach-api) Open your browser and go to:
+```
+http://localhost:8000/coaches
+```
+5. Run Development Mode Directly in the Container (if necessary) If you need to debug or manually run the development server inside the container:
+```
+docker exec -it coach-app /bin/bash
+# Inside the container
+npm run dev
+```
+6. Stop All Running Containers To stop all the containers managed by Docker Compose:
+```
+docker-compose down
+```
+7. Clean Up (Remove Unused Docker Images) After you've stopped your containers, you can remove unused images and containers:
+```
+docker system prune -a
+```
