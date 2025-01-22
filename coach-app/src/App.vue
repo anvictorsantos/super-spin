@@ -15,7 +15,6 @@
         :fields="fields"
         :data="filteredCoaches"
         :sortableFields="sortableFields"
-        @sortChanged="handleSortChange"
         aria-labelledby="coach-table"
       >
         <!-- Show 'No records found' message if there are no filtered coaches -->
