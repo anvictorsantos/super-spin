@@ -1,5 +1,5 @@
 <p align="center">
-<img src="./coach-app/src/assets/super-spin-logo.webp)" />
+<img src="https://github.com/anvictorsantos/super-spin/coach-app/src/assets/super-spin-logo.webp)" />
 </p>
 
 # SuperSpin
