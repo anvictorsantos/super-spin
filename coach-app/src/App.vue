@@ -1,22 +1,11 @@
 <template>
   <div id="app">
-    <!-- Use header element for the main heading -->
-    <header>
-      <h1 class="text-center" role="heading" aria-level="1">SuperSpin Coaches</h1>
-    </header>
-
-    <!-- Use section for filtering, providing ARIA description -->
-    <section class="filter-container" aria-labelledby="search-bar">
-      <label id="search-bar" for="searchInput" class="sr-only"
-        >Search coaches by name or location:</label
-      >
-      <SearchBar @search="handleSearch" aria-label="Search Coaches" />
-    </section>
-
     <main>
       <!-- Provide ARIA live region for loading and error messages -->
       <div v-if="loading" role="status" aria-live="polite">Loading...</div>
       <div v-else-if="error" class="error" role="alert" aria-live="assertive">{{ error }}</div>
+
+      <SearchBar @search="handleSearch" aria-label="Search Coaches" />
 
       <!-- Pass the filtered data to the DataTable and ensure it's properly announced to screen readers -->
       <DataTable
@@ -25,12 +14,18 @@
         :sortableFields="sortableFields"
         @sortChanged="handleSortChange"
         aria-labelledby="coach-table"
-      />
+      >
+        <template #caption>
+          <caption id="coach-table">
+            <h1 class="text-center">SuperSpin Coaches</h1>
+          </caption>
+        </template>
 
-      <!-- Show 'No records found' message if there are no filtered coaches -->
-      <div v-if="filteredCoaches.length === 0" class="no-records" role="alert">
-        No records found
-      </div>
+        <!-- Show 'No records found' message if there are no filtered coaches -->
+        <template #no-records v-if="filteredCoaches.length === 0">
+          <p class="no-records" role="alert">No records found</p>
+        </template>
+      </DataTable>
     </main>
   </div>
 </template>

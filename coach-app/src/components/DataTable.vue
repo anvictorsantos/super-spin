@@ -1,9 +1,11 @@
 <template>
   <div>
+    <slot name="filter"></slot>
     <table>
+      <slot name="caption"></slot>
       <thead>
         <tr>
-          <th v-for="(item, idx) in fields" :key="idx">
+          <th v-for="(item, idx) in fields" :key="idx" scope="col">
             <span @click="sortBy(item.key)">
               {{ item.label }}
               <span v-if="sortableFields.includes(item.key)">
@@ -16,7 +18,7 @@
       </thead>
       <tbody>
         <tr v-for="(item, index) in paginatedData" :key="index">
-          <td v-for="(field, idx) in fields" :key="idx">
+          <td v-for="(field, idx) in fields" :key="idx" :data-label="field.label">
             <span v-if="!hasNamedSlot(field.key)" :item="item">
               {{ item[field.key] }}
             </span>
@@ -25,6 +27,8 @@
         </tr>
       </tbody>
     </table>
+
+    <slot name="no-records"></slot>
 
     <!-- Pagination controls -->
     <div class="pagination">

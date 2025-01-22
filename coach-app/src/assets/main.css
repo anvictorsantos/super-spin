@@ -1,18 +1,19 @@
-/* Global Styles */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
+/* General Styling */
 body {
+  font-family: "Open Sans", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.25;
   background-color: #f4f7fc;
   padding: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 /* Header Section */
@@ -37,35 +38,91 @@ table {
   margin-top: 20px;
   border-radius: 8px;
   overflow: hidden;
+  table-layout: fixed;
 }
 
-th, td {
-  padding: 16px;
-  text-align: left;
-  font-size: 1rem;
+table caption {
+  font-size: 1.5em;
+  margin: 0.5em 0 0.75em;
   color: #333;
 }
 
-th {
+table th,
+table td {
+  padding: 16px;
+  text-align: center;
+  font-size: 1rem;
+  color: #333;
+  border-top: 1px solid #f0f0f0;
+}
+
+table th {
   background-color: #0066cc;
   color: white;
   font-weight: bold;
   text-transform: uppercase;
   letter-spacing: 1px;
-  padding: 18px 16px;
 }
 
-td {
-  border-top: 1px solid #f0f0f0;
+table tr {
+  background-color: #f8f8f8;
+  border: 1px solid #ddd;
+  padding: 0.35em;
 }
 
-tr:nth-child(even) td {
+table tr:nth-child(even) td {
   background-color: #f9f9f9;
 }
 
-tr:hover {
+table tr:hover {
   background-color: #f1f1f1;
   cursor: pointer;
+}
+
+/* Responsive Table */
+@media screen and (max-width: 600px) {
+  table {
+    border: 0;
+  }
+
+  table caption {
+    font-size: 1.3em;
+  }
+
+  table thead {
+    border: none;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+  }
+
+  table tr {
+    border-bottom: 3px solid #ddd;
+    display: block;
+    margin-bottom: 0.625em;
+  }
+
+  table td {
+    border-bottom: 1px solid #ddd;
+    display: block;
+    font-size: 0.8em;
+    text-align: right;
+  }
+
+  table td::before {
+    content: attr(data-label);
+    float: left;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+
+  table td:last-child {
+    border-bottom: 0;
+  }
 }
 
 /* Checkbox Styles */
@@ -87,7 +144,7 @@ input[type="checkbox"]:focus {
   box-shadow: 0 0 4px rgba(0, 102, 204, 0.5);
 }
 
-/* Slot Styles (Custom Styling for Named Slots) */
+/* Slot and Button Styling */
 span {
   display: inline-block;
   padding: 4px 8px;
@@ -102,7 +159,6 @@ span:hover {
   color: #333;
 }
 
-/* Footer Slot */
 slot[name="footer"] {
   margin-top: 20px;
   display: block;
@@ -111,7 +167,6 @@ slot[name="footer"] {
 
 slot[name="footer"] > * {
   font-size: 1rem;
-  color: #333;
   font-weight: 600;
   padding: 10px;
   background-color: #0066cc;
@@ -125,17 +180,16 @@ slot[name="footer"] > *:hover {
   background-color: #004d99;
 }
 
-/* Container to hold both search and sort components */
+/* Search and Sort Styles */
 .filter-container {
   display: flex;
   justify-content: space-between;
-  gap: 20px; /* space between the search bar and dropdown */
+  gap: 20px;
   width: 100%;
-  max-width: 600px; /* You can adjust the width of the container */
+  max-width: 600px;
   margin: 20px auto;
 }
 
-/* Common input and dropdown styling */
 .search-bar,
 .sort-dropdown {
   padding: 12px;
@@ -154,39 +208,10 @@ slot[name="footer"] > *:hover {
   outline: none;
 }
 
-/* Specific input and dropdown styles */
-.search-bar {
-  flex: 1;
-}
-
-.sort-dropdown {
-  flex: 0 0 auto;
-  appearance: none;
-  cursor: pointer;
-}
-
-/* Custom dropdown arrow */
-.sort-dropdown::after {
-  content: " ▼";
-}
-
-/* Add custom styles for the options inside the dropdown */
-.sort-dropdown option {
-  font-size: 1rem;
-  padding: 10px;
-  background-color: #fff;
-  color: #333;
-}
-
-/* Hover and focus effects on the options */
-.sort-dropdown option:hover {
-  background-color: #f0f0f0;
-}
-
 /* Responsive Design */
 @media (max-width: 768px) {
   .filter-container {
-    flex-direction: column; /* Stack vertically on smaller screens */
+    flex-direction: column;
     gap: 10px;
   }
 
@@ -207,7 +232,8 @@ slot[name="footer"] > *:hover {
     font-size: 0.9rem;
   }
 
-  th, td {
+  th,
+  td {
     padding: 12px;
   }
 }
@@ -218,66 +244,12 @@ slot[name="footer"] > *:hover {
     height: 16px;
   }
 
-  th, td {
+  th,
+  td {
     padding: 8px;
   }
 
   table {
     font-size: 0.8rem;
   }
-}
-
-/* Additional Utility Styles */
-.text-center {
-  text-align: center;
-}
-
-.asc-icon,
-.desc-icon {
-  font-size: 12px;
-  margin-left: 5px;
-}
-
-.no-records {
-  text-align: center;
-  font-size: 18px;
-  color: #777;
-  padding: 20px;
-}
-
-.pagination {
-  margin-top: 10px;
-  text-align: center;
-}
-
-button {
-  padding: 5px 10px;
-  margin: 0 5px;
-  cursor: pointer;
-}
-
-button:disabled {
-  cursor: not-allowed;
-  opacity: 0.5;
-}
-
-/* Screen reader only class to hide elements but keep them accessible for assistive tech */
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  margin: -1px;
-  padding: 0;
-  border: 0;
-  clip: rect(0, 0, 0, 0);
-  overflow: hidden;
-}
-
-.sort-button {
-  background: none;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
