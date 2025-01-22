@@ -1,8 +1,6 @@
 <template>
   <div>
-    <slot name="filter"></slot>
     <table>
-      <slot name="caption"></slot>
       <thead>
         <tr>
           <th v-for="(item, idx) in fields" :key="idx" scope="col">

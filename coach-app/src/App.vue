@@ -1,11 +1,14 @@
 <template>
   <div id="app">
+    <header class="header-container">
+      <h1 role="heading" aria-level="1">SuperSpin Coaches</h1>
+      <SearchBar @search="handleSearch" aria-label="Search Coaches" />
+    </header>
+
     <main>
       <!-- Provide ARIA live region for loading and error messages -->
       <div v-if="loading" role="status" aria-live="polite">Loading...</div>
       <div v-else-if="error" class="error" role="alert" aria-live="assertive">{{ error }}</div>
-
-      <SearchBar @search="handleSearch" aria-label="Search Coaches" />
 
       <!-- Pass the filtered data to the DataTable and ensure it's properly announced to screen readers -->
       <DataTable
@@ -15,12 +18,6 @@
         @sortChanged="handleSortChange"
         aria-labelledby="coach-table"
       >
-        <template #caption>
-          <caption id="coach-table">
-            <h1 class="text-center">SuperSpin Coaches</h1>
-          </caption>
-        </template>
-
         <!-- Show 'No records found' message if there are no filtered coaches -->
         <template #no-records v-if="filteredCoaches.length === 0">
           <p class="no-records" role="alert">No records found</p>
@@ -36,6 +33,7 @@ import apiClient from '@/services/axios'
 import SearchBar from '@/components/SearchBar.vue'
 import DataTable from '@/components/DataTable.vue'
 import type { Coach } from '@/types/Coach'
+import SortDropdown from '@/components/SortDropdown.vue'
 
 // Declare reactive variables
 const coaches = ref<Coach[]>([])
