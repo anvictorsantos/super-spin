@@ -51,7 +51,10 @@ const fetchCoaches = async () => {
       const firstCoach = coaches.value[0]
       fields.value = Object.keys(firstCoach).map((key) => ({
         key,
-        label: key.charAt(0).toUpperCase() + key.slice(1).replace('_', ' '),
+        label: key
+          .split('_')
+          .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(' '),
       }))
     }
   } catch (err) {
